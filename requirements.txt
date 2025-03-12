@@ -1,0 +1,101 @@
+# ==============================================================================
+#                       AIRgorithm Project Requirements
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+#                       Core Dependencies
+# ------------------------------------------------------------------------------
+numpy==1.23.5       # Numerical computing library
+pandas==1.5.3        # Data analysis and manipulation library
+scikit-learn>=1.2.2  # Machine learning algorithms and tools
+scipy==1.10.0        # Scientific computing tools
+
+# ------------------------------------------------------------------------------
+#                       TensorFlow and Related Libraries
+# ------------------------------------------------------------------------------
+# Trick to install the version of Tensorflow depending on your processor: darwin == Mac, ARM == M1
+tensorflow-macos==2.10.0; sys_platform == 'darwin' and 'ARM' in platform_version # Mac M-chips
+tensorflow==2.10.0; sys_platform == 'darwin' and 'ARM' not in platform_version # Mac Intel chips
+tensorflow==2.10.0; sys_platform != 'darwin' # Windows & Ubuntu Intel chips
+h5py==3.10.0          # HDF5 file format library (required by TensorFlow)
+tensorflow==2.10.0    # typo, should be tensorflow
+
+# ------------------------------------------------------------------------------
+#                       PyTorch and Related Libraries
+# ------------------------------------------------------------------------------
+torch==1.10.0         # PyTorch deep learning framework
+torchvision==0.11.1    # PyTorch's vision library
+
+# ------------------------------------------------------------------------------
+#                       Model Tools
+# ------------------------------------------------------------------------------
+ultralytics==1.0.0    # YOLOv8 framework
+
+# ------------------------------------------------------------------------------
+#                       Roboflow Integration
+# ------------------------------------------------------------------------------
+roboflow>=1.0.0       # Roboflow Python package
+
+# ------------------------------------------------------------------------------
+#                       Data Processing & Visualization
+# ------------------------------------------------------------------------------
+opencv-python>=4.7.0  # OpenCV for image processing
+pillow>=9.4.0         # Pillow for image handling
+matplotlib>=3.7.1     # Plotting library
+seaborn>=0.12.2       # Statistical data visualization
+
+# ------------------------------------------------------------------------------
+#                       Google Cloud Platform (GCP)
+# ------------------------------------------------------------------------------
+google-cloud-bigquery  # Google BigQuery integration
+google-cloud-storage==2.14.0  # Google Cloud Storage integration
+google-api-core==2.8.2  # Google API core library
+googleapis-common-protos==1.56.4  # Common protobufs for Google APIs
+protobuf==3.19.6        # Protocol Buffers
+db-dtypes              # Database data types for pandas
+pyarrow                # Arrow columnar data format
+
+# ------------------------------------------------------------------------------
+#                       MLflow and Prefect
+# ------------------------------------------------------------------------------
+mlflow==2.1.1          # MLflow for experiment tracking
+prefect==2.19.2        # Prefect for workflow orchestration
+
+# ------------------------------------------------------------------------------
+#                       API Dependencies
+# ------------------------------------------------------------------------------
+fastapi==0.108.0       # FastAPI for building APIs
+pytz                   # Timezone support
+uvicorn                # ASGI server for running FastAPI
+
+# ------------------------------------------------------------------------------
+#                       Development & Testing Tools
+# ------------------------------------------------------------------------------
+jupyterlab>=3.6.0      # JupyterLab IDE
+ipykernel>=6.21.0      # IPython kernel for Jupyter
+jupyter                # Jupyter Notebook
+pytest                 # Testing framework
+pylint                 # Code linting tool
+ipdb                   # Interactive Python debugger
+Ipython                # Interactive Python shell
+python-dotenv          # Loads environment variables from .env file
+psycopg2-binary        # PostgreSQL adapter for Python
+
+# ------------------------------------------------------------------------------
+#                       Testing
+# ------------------------------------------------------------------------------
+httpx<0.28             # HTTP client for testing
+pytest-asyncio         # Asyncio support for pytest
+
+# ------------------------------------------------------------------------------
+#                       Utilities
+# ------------------------------------------------------------------------------
+tqdm>=4.65.1          # Progress bar library
+
+# ------------------------------------------------------------------------------
+#                       Unnecessary Dependencies (Commented Out)
+# ------------------------------------------------------------------------------
+# wheel                  # Package distribution format (usually handled by pip)
+# nbresult               # Unclear purpose, consider removing if not used
+# colorama               # Unclear purpose, consider removing if not used
+# yapf                   # Unclear purpose, consider removing if not used
