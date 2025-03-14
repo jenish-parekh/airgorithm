@@ -51,29 +51,18 @@ def drop_no_label():
             continue
 
         files = os.listdir(LABEL_PATH)
-        for file in files:
+        for file in os.listdir(LABEL_PATH):
             label_file = os.path.join(LABEL_PATH, file)
             image_file = os.path.join(IMAGE_PATH, file.replace('.txt', '.jpg'))
 
-            with open(label_file, 'r') as f:
-                lines = f.readlines()
-                if len(lines) == 0:  # Fichier label vide
-                    os.remove(label_file)
-                    if os.path.exists(image_file):
-                        os.remove(image_file)
-
+            if os.stat(label_file).st_size == 0:  # Vérifie la taille du fichier directement
+                os.remove(label_file)
+                if os.path.exists(image_file):
+                    os.remove(image_file)
         print(f"✅ files with 'None' damage type cleaned.")
 
 
 # drop the files in image_path and label_path that contains string 20220424
-
-def drop_file_20220424():
-    files = os.listdir(LABEL_PATH)
-    for file in files:
-        if '20220424' in file:
-            os.remove(os.path.join(LABEL_PATH, file))
-            os.remove(os.path.join(IMAGE_PATH, file.replace('.txt', '.jpg')))
-    print("✅ files containing '20220424' cleaned")
 
 def drop_file_20220424():
     for dataset_type in DATASETS:
@@ -128,14 +117,6 @@ def get_bounding_boxes():
     return bounding_boxes
 
 # Create a pandas dataframe from the bounding boxes
-
-def create_dataframe(img_path=IMAGE_PATH):
-    bounding_boxes = get_bounding_boxes()
-    bounding_boxes_df = pd.DataFrame(bounding_boxes, columns=['label_name', 'damage_type', 'x_center', 'y_center', 'width', 'height'])
-    bounding_boxes_df['area'] = bounding_boxes_df['width'] * bounding_boxes_df['height']
-    bounding_boxes_df['image_path'] = img_path + bounding_boxes_df['label_name'].str.replace('.txt', '.jpg')
-    return bounding_boxes_df
-
 def create_dataframe():
     bounding_boxes = get_bounding_boxes()
 
@@ -147,8 +128,8 @@ def create_dataframe():
 
     # Générer les chemins d'image en fonction du dataset
     bounding_boxes_df['image_path'] = bounding_boxes_df.apply(
-        lambda row: os.path.join(PATH_PROJECT, f'raw_data/{row["dataset"]}/images/', row['label_name'].replace('.txt', '.jpg')),
-        axis=1
+    lambda row: os.path.join(PREPROCESSED_PATH, f'{row["dataset"]}/images/', row['label_name'].replace('.txt', '.jpg')),
+    axis=1
     )
 
     print(f"✅ DataFrame created with {len(bounding_boxes_df)} labels issued from {len(bounding_boxes_df['dataset'].unique())} datasets.")
@@ -156,24 +137,6 @@ def create_dataframe():
 
 
 # drop the files with area less than bb_small_size
-
-def drop_small_bb():
-    """Remove images and labels files if bounding boxes smaller than the defined threshold."""
-    df = create_dataframe()
-    small_bb = df[df['area'] < BB_SMALL_SIZE]
-    for index, row in small_bb.iterrows():
-        try:
-            image_name = row['label_name'].replace('.txt', '.jpg')  # Correctly construct image name
-            image_path = os.path.join(IMAGE_PATH, image_name)
-            label_path = os.path.join(LABEL_PATH, row['label_name'])
-
-            os.remove(image_path)
-            os.remove(label_path)
-        except FileNotFoundError:
-            print(f"Warning: Could not find file: {image_path} or {label_path}")
-        except Exception as e:
-            print(f"An error occurred while processing {image_path} or {label_path}: {e}")
-    print("✅ images with small bounding boxes cleaned")
 
 def drop_small_bb():
     """Remove images and labels files if bounding boxes are smaller than the defined threshold for all dataset splits."""
