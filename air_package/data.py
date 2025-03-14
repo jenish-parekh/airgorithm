@@ -12,14 +12,13 @@ import pandas as pd
 import cv2
 import shutil
 
-
 # define variables & path
 IMAGE_HEIGHT = 1024
 IMAGE_WEIDTH = 1240
 RESIZE_RATIO = 0.625
 NEW_IMAGE_SIZE = (int(IMAGE_HEIGHT * RESIZE_RATIO), int(IMAGE_WEIDTH * RESIZE_RATIO))
 BB_SMALL_SIZE = 0.0025
-PATH_PROJECT = '/home/jenish/code/jenish-parekh/airgorithm'
+PATH_PROJECT = Path(__file__).resolve().parent.parent
 IMAGE_PATH = os.path.join(PATH_PROJECT, 'raw_data/train/images/')
 LABEL_PATH = os.path.join(PATH_PROJECT, 'raw_data/train/labels/')
 PREPROCESSED_PATH = os.path.join(PATH_PROJECT, "preprocessed_data")
@@ -64,24 +63,24 @@ def drop_no_label():
 
 # drop the files in image_path and label_path that contains string 20220424
 
-def drop_file_20220424():
-    for dataset_type in DATASETS:
-        IMAGE_PATH = os.path.join(PREPROCESSED_PATH, f'{dataset_type}/images/')
-        LABEL_PATH = os.path.join(PREPROCESSED_PATH, f'{dataset_type}/labels/')
+# def drop_file_20220424():
+#     for dataset_type in DATASETS:
+#         IMAGE_PATH = os.path.join(PREPROCESSED_PATH, f'{dataset_type}/images/')
+#         LABEL_PATH = os.path.join(PREPROCESSED_PATH, f'{dataset_type}/labels/')
 
-        if not os.path.exists(LABEL_PATH) or not os.path.exists(IMAGE_PATH):
-            print(f"⚠️ Dossier {dataset_type} introuvable. Vérifiez le chemin.")
-            continue
+#         if not os.path.exists(LABEL_PATH) or not os.path.exists(IMAGE_PATH):
+#             print(f"⚠️ Dossier {dataset_type} introuvable. Vérifiez le chemin.")
+#             continue
 
-        files = os.listdir(LABEL_PATH)
-        for file in files:
-            if '20220424' in file:
-                os.remove(os.path.join(LABEL_PATH, file))
-                image_file = os.path.join(IMAGE_PATH, file.replace('.txt', '.jpg'))
-                if os.path.exists(image_file):
-                    os.remove(image_file)
+#         files = os.listdir(LABEL_PATH)
+#         for file in files:
+#             if '20220424' in file:
+#                 os.remove(os.path.join(LABEL_PATH, file))
+#                 image_file = os.path.join(IMAGE_PATH, file.replace('.txt', '.jpg'))
+#                 if os.path.exists(image_file):
+#                     os.remove(image_file)
 
-        print(f"✅ Files containing '20220424' cleaned in {dataset_type}.")
+#         print(f"✅ Files containing '20220424' cleaned in {dataset_type}.")
 
 # create a list of bounding boxes
 def get_bounding_boxes():
@@ -291,7 +290,7 @@ def main():
     # load_data_from_gcp() dans son propre script
     copy_raw_data()  # Copie les fichiers bruts vers preprocessed_data avant transformation
     drop_no_label()
-    drop_file_20220424()
+    # drop_file_20220424()
     drop_small_bb()
     resize_image()
     print("✅ Processing completed on preprocessed_data.")
