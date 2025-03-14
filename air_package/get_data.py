@@ -8,9 +8,8 @@ from tqdm import tqdm
 import time
 import os
 
-
 def load_data_from_gcp(bucket_name="roboflow-airgorithm-dataset",
-                       dataset_path="new_splits",
+                       dataset_path="nouveau_dataset",
                        local_download_dir=Path("./raw_data")):
     # Initialiser le client Google Cloud Storage
     client = storage.Client()
