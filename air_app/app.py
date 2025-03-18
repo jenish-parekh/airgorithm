@@ -1,63 +1,92 @@
-# app.py
-
 import streamlit as st
-from air_api.load_model import load_model, process_image
+import requests
+import base64
 from PIL import Image
-import numpy as np
+from io import BytesIO
 import pandas as pd
+import datetime
 
-st.title("Détection de dommages sur avions")
-st.write("Chargez vos images pour détecter automatiquement les dommages.")
+st.image("images/logo_AirGorithm_-_option_2a-removebg-previewv1.png")
 
-# Charger le modèle avec mise en cache pour éviter de le recharger à chaque interaction
-@st.cache_resource
-def get_model():
-    return load_model()
+st.markdown("""
+# Welcome to **AirGorithm**
+## This platform helps you to identify damages on aircraft's bodies and classify the type of damages.
+### Select a method to upload the pictures taken by the drone:
+""")
 
-model = get_model()
+airline_name = st.text_input("Airline name", "Air France")
+st.write('You have entered the following airline', airline_name)
 
-# Uploader multiple d'images
-uploaded_files = st.file_uploader("Charger des images", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
+description = st.text_area('Audit description', '''''')
+st.write("Length:", len(description))
 
-if uploaded_files:
-    global_detections = []  # Liste pour stocker les détections de toutes les images
+today = datetime.date.today()
+d = st.date_input("Select the date of the audit", today)
+st.write('You selected', d)
 
-    # Traitement de chaque image uploadée
-    for uploaded_file in uploaded_files:
-        image = Image.open(uploaded_file).convert("RGB")
-        results, detections = process_image(model, image)
+col1, col2 = st.columns([3, 1])
+with col1:
+    direction = st.radio('Select an upload method', ('Upload manually', 'Connect the drone'))
+with col2:
+    icon_html = """
+    <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+        <span style="font-size: 50px;">{}</span>
+    </div>
+    """.format("🤖" if direction == 'Connect the drone' else "💾")
+    st.markdown(icon_html, unsafe_allow_html=True)
 
-        st.subheader(f"Résultats pour {uploaded_file.name}")
-        # Affichage de l'image annotée
-        annotated_image = results[0].plot()  # Retourne un array numpy avec les bounding boxes dessinées
-        st.image(annotated_image, caption=uploaded_file.name, use_column_width=True)
+st.write(f"Selected option: {direction}")
 
-        # Affichage des détections sous forme de tableau
-        if detections:
-            df = pd.DataFrame([{
-                "Fichier": uploaded_file.name,
-                "Classe": det["class"],
-                "Confiance": f"{det['confidence']:.3f}",
-                "Bounding Box": f"({det['bounding_box'][0]:.0f}, {det['bounding_box'][1]:.0f}, {det['bounding_box'][2]:.0f}, {det['bounding_box'][3]:.0f})"
-            } for det in detections])
-            st.table(df)
-            global_detections.extend([{
-                "Fichier": uploaded_file.name,
-                "Classe": det["class"],
-                "Confiance": det["confidence"]
-            } for det in detections])
-        else:
-            st.info("Aucune détection sur cette image.")
+if direction == "Upload manually":
+    uploaded_files = st.file_uploader("Charger des images", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
+    if uploaded_files:
+        global_detections = []  # Pour stocker toutes les détections
+        api_url = "http://localhost:8000/predict/"  # URL de l'API
 
-    # Synthèse globale
-    if global_detections:
-        st.subheader("Synthèse des détections globales")
-        df_all = pd.DataFrame(global_detections)
-        st.write("Détails de toutes les détections sur l'ensemble des images :")
-        st.dataframe(df_all)
+        for uploaded_file in uploaded_files:
+            files = {"file": (uploaded_file.name, uploaded_file, uploaded_file.type)}
+            response = requests.post(api_url, files=files)
+            if response.status_code == 200:
+                result_json = response.json()
+                detections = result_json.get("detections", [])
+                annotated_image_b64 = result_json.get("annotated_image", "")
 
-        st.write("Nombre de détections par classe :")
-        df_grouped = df_all.groupby("Classe").size().reset_index(name="Nombre de détections")
-        st.table(df_grouped)
+                st.subheader(f"Résultats pour {uploaded_file.name}")
+                if annotated_image_b64:
+                    # Décoder l'image annotée
+                    img_bytes = base64.b64decode(annotated_image_b64)
+                    img = Image.open(BytesIO(img_bytes))
+                    st.image(img, caption=uploaded_file.name, use_column_width=True)
+                else:
+                    st.info("Aucune image annotée renvoyée par l'API.")
+
+                if detections:
+                    df = pd.DataFrame([{
+                        "Fichier": uploaded_file.name,
+                        "Classe": det["class"],
+                        "Confiance": f"{det['confidence']:.3f}",
+                        "Bounding Box": f"({det['bounding_box'][0]:.0f}, {det['bounding_box'][1]:.0f}, {det['bounding_box'][2]:.0f}, {det['bounding_box'][3]:.0f})"
+                    } for det in detections])
+                    st.table(df)
+                    global_detections.extend([{
+                        "Fichier": uploaded_file.name,
+                        "Classe": det["class"],
+                        "Confiance": det["confidence"]
+                    } for det in detections])
+                else:
+                    st.info("Aucune détection sur cette image.")
+            else:
+                st.error(f"Erreur de prédiction pour {uploaded_file.name} : {response.status_code}")
+
+        if global_detections:
+            st.subheader("Synthèse des détections globales")
+            df_all = pd.DataFrame(global_detections)
+            st.write("Détails de toutes les détections sur l'ensemble des images :")
+            st.dataframe(df_all)
+            st.write("Nombre de détections par classe :")
+            df_grouped = df_all.groupby("Classe").size().reset_index(name="Nombre de détections")
+            st.table(df_grouped)
+    else:
+        st.info("Veuillez charger au moins une image.")
 else:
-    st.info("Veuillez charger au moins une image.")
+    st.image("images/457d9577a9fb58d83460e794bef5f859.gif")
