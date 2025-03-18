@@ -83,6 +83,7 @@ prefect       # Prefect for workflow orchestration
 fastapi       # FastAPI for building APIs
 pytz          # Timezone support
 uvicorn       # ASGI server for running FastAPI
+requests   # Bibliothèque HTTP pour Python, permettant d'envoyer facilement des requêtes HTTP et de gérer les réponses.
 
 # ------------------------------------------------------------------------------
 #                       Development & Testing Tools
