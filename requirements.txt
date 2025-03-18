@@ -18,18 +18,21 @@ tensorflow-macos; sys_platform == 'darwin' and 'ARM' in platform_version  # Mac 
 tensorflow; sys_platform == 'darwin' and 'ARM' not in platform_version  # Mac Intel chips
 tensorflow; sys_platform != 'darwin'  # Windows & Ubuntu Intel chips
 h5py         # HDF5 file format library (required by TensorFlow)
-tensorflow   # Typo corrected (only one occurrence of tensorflow)
+tensorflow==2.15.0  # Version compatible avec CUDA 11+
 
 # ------------------------------------------------------------------------------
 #                       PyTorch and Related Libraries
 # ------------------------------------------------------------------------------
-torch        # PyTorch deep learning framework
-torchvision  # PyTorch's vision library
+torch==2.1.0+cu118  # PyTorch compatible CUDA 11+
+torchvision==0.16.0+cu118  # Vision library compatible CUDA 11+
+torchaudio==2.1.0+cu118  # Audio library compatible CUDA 11+
 
 # ------------------------------------------------------------------------------
 #                       Model Tools
 # ------------------------------------------------------------------------------
 ultralytics  # YOLOv8 framework
+onnx         # ONNX format support
+onnxruntime  # ONNX inference optimization
 
 # ------------------------------------------------------------------------------
 #                       Roboflow Integration
@@ -43,6 +46,19 @@ opencv-python  # OpenCV for image processing
 pillow        # Pillow for image handling
 matplotlib    # Plotting library
 seaborn       # Statistical data visualization
+shapely       # Geometry operations (used for bounding boxes)
+imgaug        # Image augmentation library
+albumentations  # Advanced image augmentation
+scikit-image  # Additional image processing tools
+
+# ------------------------------------------------------------------------------
+#                       GPU Optimization (for A100)
+# ------------------------------------------------------------------------------
+nvidia-pyindex  # NVIDIA package index
+nvidia-tensorRT  # TensorRT for inference optimization
+apex          # NVIDIA Apex for mixed precision training
+cupy-cuda11x  # GPU-accelerated NumPy operations
+xformers      # Memory-efficient attention computation (useful for YOLO models)
 
 # ------------------------------------------------------------------------------
 #                       Google Cloud Platform (GCP)
@@ -81,6 +97,7 @@ Ipython       # Interactive Python shell
 python-dotenv # Loads environment variables from .env file
 psycopg2-binary  # PostgreSQL adapter for Python
 psycopg2  # PostgreSQL adapter for Python
+
 # ------------------------------------------------------------------------------
 #                       Testing
 # ------------------------------------------------------------------------------
@@ -91,6 +108,13 @@ pytest-asyncio  # Asyncio support for pytest
 #                       Utilities
 # ------------------------------------------------------------------------------
 tqdm         # Progress bar library
+
+# ------------------------------------------------------------------------------
+#                       Interface Utilisateur (UI) pour le Déploiement
+# ------------------------------------------------------------------------------
+streamlit    # Interface simple pour tester l’API YOLO
+gradio       # Interface interactive pour tester le modèle YOLO
+dash         # Web framework pour visualisation avancée
 
 # ------------------------------------------------------------------------------
 #                       Unnecessary Dependencies (Commented Out)
