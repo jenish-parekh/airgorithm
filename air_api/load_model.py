@@ -24,19 +24,20 @@ def process_image(model, image):
     results = model.predict(image_np)
 
     detections = []
-    if results[0].boxes and len(results[0].boxes) > 0:
-        boxes = results[0].boxes.xyxy  # coordonnées au format [xmin, ymin, xmax, ymax]
-        confidences = results[0].boxes.conf
-        class_ids = results[0].boxes.cls
-
-        for i in range(len(boxes)):
-            box = boxes[i]
-            conf = confidences[i]
-            cls_id = int(class_ids[i])
-            class_name = results[0].names[cls_id]
+    # Extraction alternative en utilisant results[0].boxes.data
+    if hasattr(results[0].boxes, "data"):
+        # On convertit les données en tableau NumPy (en passant par CPU si nécessaire)
+        try:
+            boxes = results[0].boxes.data.cpu().numpy()
+        except AttributeError:
+            boxes = results[0].boxes.data.numpy()
+        # Chaque 'box' contient [x1, y1, x2, y2, score, class]
+        for box in boxes:
+            x1, y1, x2, y2, score, cls_id = box
+            class_name = results[0].names[int(cls_id)]
             detections.append({
                 "class": class_name,
-                "confidence": float(conf),
-                "bounding_box": (box[0], box[1], box[2], box[3])
+                "confidence": float(score),
+                "bounding_box": (x1, y1, x2, y2)
             })
     return results, detections
