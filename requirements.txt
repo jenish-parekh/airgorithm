@@ -1,11 +1,11 @@
 # ==============================================================================
-#                       AIRgorithm Project Requirements
+#                       AirGorithm Project Requirements
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
 #                       Core Dependencies
 # ------------------------------------------------------------------------------
-numpy         # Numerical computing library
+numpy==1.23.5 # Numerical computing library
 pandas        # Data analysis and manipulation library
 scikit-learn  # Machine learning algorithms and tools
 scipy         # Scientific computing tools
@@ -14,23 +14,22 @@ scipy         # Scientific computing tools
 #                       TensorFlow and Related Libraries
 # ------------------------------------------------------------------------------
 # Trick to install the version of Tensorflow depending on your processor: darwin == Mac, ARM == M1
-tensorflow-macos; sys_platform == 'darwin' and 'ARM' in platform_version  # Mac M-chips
-tensorflow; sys_platform == 'darwin' and 'ARM' not in platform_version  # Mac Intel chips
-tensorflow; sys_platform != 'darwin'  # Windows & Ubuntu Intel chips
-h5py         # HDF5 file format library (required by TensorFlow)
-tensorflow==2.15.0  # Version compatible avec CUDA 11+
+tensorflow-macos==2.15.0; sys_platform == 'darwin' and 'ARM' in platform_version  # Mac avec puces M1
+tensorflow==2.15.0; sys_platform == 'darwin' and 'ARM' not in platform_version  # Mac avec processeurs Intel
+tensorflow==2.15.0; sys_platform != 'darwin'  # Windows & Ubuntu
+h5py          # HDF5 file format library (required by TensorFlow)
 
 # ------------------------------------------------------------------------------
 #                       PyTorch and Related Libraries
 # ------------------------------------------------------------------------------
-torch==2.1.0+cu118  # PyTorch compatible CUDA 11+
-torchvision==0.16.0+cu118  # Vision library compatible CUDA 11+
-torchaudio==2.1.0+cu118  # Audio library compatible CUDA 11+
+torch  # PyTorch
+torchvision  # Vision library
+torchaudio  # Audio library
 
 # ------------------------------------------------------------------------------
 #                       Model Tools
 # ------------------------------------------------------------------------------
-ultralytics  # YOLOv8 framework
+ultralytics==8.3.93  # YOLOv8 framework
 onnx         # ONNX format support
 onnxruntime  # ONNX inference optimization
 
@@ -94,7 +93,7 @@ jupyter       # Jupyter Notebook
 pytest        # Testing framework
 pylint        # Code linting tool
 ipdb          # Interactive Python debugger
-Ipython       # Interactive Python shell
+ipython       # Interactive Python shell
 python-dotenv # Loads environment variables from .env file
 psycopg2-binary  # PostgreSQL adapter for Python
 psycopg2  # PostgreSQL adapter for Python

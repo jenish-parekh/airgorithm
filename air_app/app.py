@@ -6,7 +6,9 @@ from io import BytesIO
 import pandas as pd
 import datetime
 
-st.image("images/logo_AirGorithm_-_option_2a-removebg-previewv1.png")
+left_co, cent_co,last_co = st.columns(3)
+with cent_co:
+    st.image("images/logo_AirGorithm_-_option_2a-removebg-previewv1.png")
 
 st.markdown("""
 # Welcome to **AirGorithm**
@@ -17,7 +19,21 @@ st.markdown("""
 airline_name = st.text_input("Airline name", "Air France")
 st.write('You have entered the following airline', airline_name)
 
-description = st.text_area('Audit description', '''''')
+description = st.text_area('Audit description', '''Comprehensive audit on a selected fleet using both traditional inspection
+methods and an advanced AI-powered damage detection system.
+The process leverages the AirGorithm that pre-screens aircraft images to
+automatically identify and assess surface damages such as dents, cracks, and
+scratches. By pre-identifying potential issues, our expert inspectors can focus
+their manual checks more effectively, saving significant time and enhancing
+overall accuracy.
+
+In our recent pilot audit, the AI system pre-screened a fleet of 150 aircraft
+spanning 10 different models, flagging over 1,200 potential damage instances.
+This preliminary detection stage reduced manual inspection hours by
+approximately 40% and increased damage detection accuracy by nearly 30%
+compared to conventional methods alone. These promising results underscore the
+transformative potential of integrating AI-driven pre-screening into aircraft
+maintenance workflows for more efficient and reliable operations.''')
 st.write("Length:", len(description))
 
 today = datetime.date.today()
@@ -56,7 +72,7 @@ if direction == "Upload manually":
                     # Décoder l'image annotée
                     img_bytes = base64.b64decode(annotated_image_b64)
                     img = Image.open(BytesIO(img_bytes))
-                    st.image(img, caption=uploaded_file.name, use_column_width=True)
+                    st.image(img, caption=uploaded_file.name, use_container_width=True)
                 else:
                     st.info("Aucune image annotée renvoyée par l'API.")
 
@@ -73,8 +89,8 @@ if direction == "Upload manually":
                         "Classe": det["class"],
                         "Confiance": det["confidence"]
                     } for det in detections])
-                else:
-                    st.info("Aucune détection sur cette image.")
+                # else:
+                #     st.info("Aucune détection sur cette image.")
             else:
                 st.error(f"Erreur de prédiction pour {uploaded_file.name} : {response.status_code}")
 
