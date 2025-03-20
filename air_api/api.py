@@ -11,6 +11,10 @@ app = FastAPI()
 # Charger le modèle une seule fois lors du démarrage
 model = load_model()
 
+@app.get("/")
+async def home():
+    return {"message": "API is running"}
+
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)):
     """

@@ -53,11 +53,11 @@ scikit-image  # Additional image processing tools
 # ------------------------------------------------------------------------------
 #                       GPU Optimization (for A100)
 # ------------------------------------------------------------------------------
-nvidia-pyindex  # NVIDIA package index
-nvidia-tensorRT  # TensorRT for inference optimization
-apex          # NVIDIA Apex for mixed precision training
-cupy-cuda11x  # GPU-accelerated NumPy operations
-xformers      # Memory-efficient attention computation (useful for YOLO models)
+# nvidia-pyindex  # NVIDIA package index
+# nvidia-tensorRT  # TensorRT for inference optimization
+# apex          # NVIDIA Apex for mixed precision training
+# cupy-cuda11x  # GPU-accelerated NumPy operations
+# xformers      # Memory-efficient attention computation (useful for YOLO models)
 
 # ------------------------------------------------------------------------------
 #                       Google Cloud Platform (GCP)
@@ -96,7 +96,7 @@ ipdb          # Interactive Python debugger
 ipython       # Interactive Python shell
 python-dotenv # Loads environment variables from .env file
 psycopg2-binary  # PostgreSQL adapter for Python
-psycopg2  # PostgreSQL adapter for Python
+# psycopg2  # PostgreSQL adapter for Python
 
 # ------------------------------------------------------------------------------
 #                       Testing
