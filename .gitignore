@@ -2,3 +2,6 @@ raw_data/
 .env
 .envrc
 .python-version
+.ipynb
+notebook/
+preprocessed_data/
